@@ -45,9 +45,9 @@ import com.jsb.calculator.activity.HistoryActivity;
 import com.jsb.calculator.Classes.Fonts;
 import com.jsb.calculator.activity.HomeActivity;
 import com.jsb.calculator.databinding.KeyboardBinding;
-import com.jsb.calculator.modules.Modules;
 import com.jsb.calculator.R;
 import com.jsb.calculator.Service.FloatingCalculator;
+import com.jsb.calculator.modules.CalculatorHistory;
 
 import org.mariuszgromada.math.mxparser.Expression;
 
@@ -454,7 +454,7 @@ public class SimpleIME extends InputMethodService
     public View onCreateInputView() {
         binding = KeyboardBinding.inflate(getLayoutInflater());
         sharedPreferences = getSharedPreferences("com.jsb.calculator", MODE_PRIVATE);
-        binding.et1.setKeyListener(null);
+        binding.calculatedTextEt.setKeyListener(null);
         clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -471,89 +471,89 @@ public class SimpleIME extends InputMethodService
         tts.setLanguage(Locale.US);
 
 
-        onClickBtNumber(binding.et1, binding.bt1, "1", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt1, "1", view -> {
             fastType(49, binding.bt1, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt2, "2", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt2, "2", view -> {
             fastType(50, binding.bt2, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt3, "3", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt3, "3", view -> {
             fastType(51, binding.bt3, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt4, "4", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt4, "4", view -> {
             fastType(52, binding.bt4, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt5, "5", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt5, "5", view -> {
             fastType(53, binding.bt5, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt6, "6", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt6, "6", view -> {
             fastType(54, binding.bt6, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt7, "7", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt7, "7", view -> {
             fastType(55, binding.bt7, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt8, "8", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt8, "8", view -> {
             fastType(56, binding.bt8, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt9, "9", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt9, "9", view -> {
             fastType(57, binding.bt9, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt0, "0", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt0, "0", view -> {
             fastType(48, binding.bt0, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.bt00, "00", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.bt00, "00", view -> {
             InputMethodManager imeManager = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
             imeManager.showInputMethodPicker();
             return true;
         });
-        onClickBtNumber(binding.et1, binding.btI, "×", view -> {
-            fastType(215, binding.btI, 500);
+        onClickBtNumber(binding.calculatedTextEt, binding.btMultiply, "×", view -> {
+            fastType(215, binding.btMultiply, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.btD, "÷", view -> {
-            fastType(247, binding.btD, 500);
+        onClickBtNumber(binding.calculatedTextEt, binding.btDivide, "÷", view -> {
+            fastType(247, binding.btDivide, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.btDot, ".", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.btDot, ".", view -> {
             fastType(46, binding.btDot, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.btM, "-", view -> {
-            fastType(45, binding.btM, 500);
+        onClickBtNumber(binding.calculatedTextEt, binding.btMinus, "-", view -> {
+            fastType(45, binding.btMinus, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.btP, "%", view -> {
-            fastType(37, binding.btP, 500);
+        onClickBtNumber(binding.calculatedTextEt, binding.btPercentage, "%", view -> {
+            fastType(37, binding.btPercentage, 500);
             return true;
         });
-        onClickBtNumber(binding.et1, binding.btPlus, "+", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.btPlus, "+", view -> {
             fastType(43, binding.btPlus, 500);
             return true;
         });
 
-        onClickBtNumber(binding.et1, binding.btB1, "(", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.btB1, "(", view -> {
             fastType(40, binding.btB1, 500);
             return true;
         });
 
-        onClickBtNumber(binding.et1, binding.btB2, ")", view -> {
+        onClickBtNumber(binding.calculatedTextEt, binding.btB2, ")", view -> {
             fastType(41, binding.btB2, 500);
             return true;
         });
 
 
-        binding.btE.setOnClickListener(view -> {
-            String aa = binding.et1.getText().toString();
+        binding.btEqualsTo.setOnClickListener(view -> {
+            String aa = binding.calculatedTextEt.getText().toString();
             if (!aa.isEmpty()){
 
                 if (aa.endsWith("+") || aa.endsWith("%") || aa.endsWith(".") || aa.endsWith("×") || aa.endsWith("÷") || aa.endsWith("-")){
@@ -580,14 +580,10 @@ public class SimpleIME extends InputMethodService
                     calculate = method(calculate);
                     calculate = method(calculate);
                 }
-                Modules.CalHis calHis = new Modules.CalHis();
-                calHis.setTime(System.currentTimeMillis());
-                calHis.setType(1);
-                calHis.setCal(c);
-                calHis.setValue(valll);
+                CalculatorHistory calHis = new CalculatorHistory(System.currentTimeMillis(), c, valll, 1);
 
                 saveCalHisList(calHis);
-                binding.et1.setText(calculate);
+                binding.calculatedTextEt.setText(calculate);
             }
         });
 
@@ -612,29 +608,29 @@ public class SimpleIME extends InputMethodService
         });
 
 
-        binding.btB.setOnClickListener(view -> {
-            if (binding.et1.getText().toString().isEmpty()){
+        binding.btBackspace.setOnClickListener(view -> {
+            if (binding.calculatedTextEt.getText().toString().isEmpty()){
                 onKey(Keyboard.KEYCODE_DELETE, new int[0]);
             }else {
-                binding.et1.setText(method(binding.et1.getText().toString()));
-                binding.et1.setSelection(binding.et1.getText().toString().length());
+                binding.calculatedTextEt.setText(method(binding.calculatedTextEt.getText().toString()));
+                binding.calculatedTextEt.setSelection(binding.calculatedTextEt.getText().toString().length());
                 liveCal();
             }
         });
 
-        binding.btB.setOnLongClickListener(view -> {
+        binding.btBackspace.setOnLongClickListener(view -> {
             cdt = new CountDownTimer(3000000*500, 50) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     Log.i("tasting", "Countdown seconds remaining: " + millisUntilFinished / 1000);
-                    if (!binding.btB.isPressed()){
+                    if (!binding.btBackspace.isPressed()){
                         cdt.cancel();
                     }else {
-                        if (binding.et1.getText().toString().isEmpty()){
+                        if (binding.calculatedTextEt.getText().toString().isEmpty()){
                             onKey(Keyboard.KEYCODE_DELETE, new int[0]);
                         }else {
-                            binding.et1.setText(method(binding.et1.getText().toString()));
-                            binding.et1.setSelection(binding.et1.getText().toString().length());
+                            binding.calculatedTextEt.setText(method(binding.calculatedTextEt.getText().toString()));
+                            binding.calculatedTextEt.setSelection(binding.calculatedTextEt.getText().toString().length());
                             liveCal();
                         }
                     }
@@ -658,16 +654,16 @@ public class SimpleIME extends InputMethodService
         });
 
 
-        binding.btC.setOnClickListener(view -> {
-            if (binding.et1.getText().toString().isEmpty()){
+        binding.btClear.setOnClickListener(view -> {
+            if (binding.calculatedTextEt.getText().toString().isEmpty()){
                 onKey(31232, new int[0]);
             }else {
-                binding.et1.setText("");
-                binding.liveCalculator.setText("00");
+                binding.calculatedTextEt.setText("");
+                binding.liveCalculatedText.setText("00");
             }
         });
 
-        binding.btC.setOnLongClickListener(view -> {
+        binding.btClear.setOnLongClickListener(view -> {
             onKey(31232, new int[0]);
             return true;
         });
@@ -681,7 +677,7 @@ public class SimpleIME extends InputMethodService
 
 
         binding.submitBt.setOnClickListener(view -> {
-            String aa = binding.et1.getText().toString();
+            String aa = binding.calculatedTextEt.getText().toString();
             if (!aa.isEmpty()){
                 if (aa.endsWith("+") || aa.endsWith("%") || aa.endsWith(".") || aa.endsWith("×") || aa.endsWith("÷") || aa.endsWith("-")){
                     aa = method(aa);
@@ -708,14 +704,10 @@ public class SimpleIME extends InputMethodService
                     tt = method(tt);
                 }
                 onKey(3443, new int[0]);
-                binding.et1.setText("");
-                binding.liveCalculator.setText("00");
+                binding.calculatedTextEt.setText("");
+                binding.liveCalculatedText.setText("00");
 
-                Modules.CalHis calHis = new Modules.CalHis();
-                calHis.setTime(System.currentTimeMillis());
-                calHis.setType(2);
-                calHis.setCal(c);
-                calHis.setValue(valll);
+                CalculatorHistory calHis = new CalculatorHistory(System.currentTimeMillis(), c, valll, 1);
 
                 saveCalHisList(calHis);
             }
@@ -1361,10 +1353,10 @@ public class SimpleIME extends InputMethodService
     }
 
     private void liveCal() {
-        String aa = binding.et1.getText().toString();
+        String aa = binding.calculatedTextEt.getText().toString();
         if (!aa.isEmpty()){
             if (aa.equals("-")){
-                binding.liveCalculator.setText("00");
+                binding.liveCalculatedText.setText("00");
                 return;
             }
             if (aa.endsWith("+") || aa.endsWith("%") || aa.endsWith(".") || aa.endsWith("×") || aa.endsWith("÷") || aa.endsWith("-")){
@@ -1389,9 +1381,9 @@ public class SimpleIME extends InputMethodService
                 tt = method(tt);
                 tt = method(tt);
             }
-            binding.liveCalculator.setText(tt);
+            binding.liveCalculatedText.setText(tt);
         }else {
-            binding.liveCalculator.setText("00");
+            binding.liveCalculatedText.setText("00");
         }
     }
 
@@ -1620,7 +1612,7 @@ public class SimpleIME extends InputMethodService
 
 
             editText.setText(string+center+text);
-            binding.et1.setSelection(binding.et1.getText().toString().length());
+            binding.calculatedTextEt.setSelection(binding.calculatedTextEt.getText().toString().length());
             liveCal();
 
 
@@ -1664,9 +1656,9 @@ public class SimpleIME extends InputMethodService
         return sharedPreferences.getString("KeyboardHis", "Start: ");
     }
 
-    public void saveCalHisList(Modules.CalHis calHis){
+    public void saveCalHisList(CalculatorHistory calHis){
         try {
-            List<Modules.CalHis> calHisList = getCalHisList();
+            List<CalculatorHistory> calHisList = getCalHisList();
             if (calHisList == null){
                 calHisList = new ArrayList<>();
             }
@@ -1678,9 +1670,9 @@ public class SimpleIME extends InputMethodService
         }
     }
     Gson gson = new Gson();
-    public List<Modules.CalHis> getCalHisList(){
+    public List<CalculatorHistory> getCalHisList(){
         String json = sharedPreferences.getString("CalHis", null);
-        Type type = new TypeToken<List<Modules.CalHis>>() {}.getType();
+        Type type = new TypeToken<List<CalculatorHistory>>() {}.getType();
         return gson.fromJson(json, type);
     }
 

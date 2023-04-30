@@ -16,8 +16,8 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jsb.calculator.adapter.HistoryAdapter;
-import com.jsb.calculator.modules.Modules;
 import com.jsb.calculator.databinding.ActivityHistoryBinding;
+import com.jsb.calculator.modules.CalculatorHistory;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 
-        List<Modules.CalHis> calHisList = getCalHisList();
+        List<CalculatorHistory> calHisList = getCalHisList();
         Collections.reverse(calHisList);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -99,12 +99,12 @@ public class HistoryActivity extends AppCompatActivity {
 
     Gson gson = new Gson();
 
-    public List<Modules.CalHis> getCalHisList() {
+    public List<CalculatorHistory> getCalHisList() {
         String json = sharedPreferences.getString("CalHis", null);
         if (json == null){
             return new ArrayList<>();
         }
-        Type type = new TypeToken<List<Modules.CalHis>>() {
+        Type type = new TypeToken<List<CalculatorHistory>>() {
         }.getType();
         return gson.fromJson(json, type);
     }

@@ -20,8 +20,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.jsb.calculator.modules.Modules;
 import com.jsb.calculator.databinding.FloatingCalculatorBinding;
+import com.jsb.calculator.modules.CalculatorHistory;
 
 import org.mariuszgromada.math.mxparser.Expression;
 
@@ -81,7 +81,7 @@ public class FloatingCalculator extends Service {
 
         binding.calLL.setVisibility(View.VISIBLE);
         binding.showCal.setVisibility(View.GONE);
-        binding.et1.setKeyListener(null);
+        binding.calculatedTextEt.setKeyListener(null);
 
 
         binding.showCal.setOnTouchListener(new View.OnTouchListener() {
@@ -183,33 +183,33 @@ public class FloatingCalculator extends Service {
 
 
     private void setUpCal(){
-        binding.et1.setText("");
-        binding.liveCalculator.setText("00");
+        binding.calculatedTextEt.setText("");
+        binding.liveCalculatedText.setText("00");
 
-        binding.btC.setOnClickListener(view -> {
-            binding.et1.setText("");
-            binding.liveCalculator.setText("00");
+        binding.btClear.setOnClickListener(view -> {
+            binding.calculatedTextEt.setText("");
+            binding.liveCalculatedText.setText("00");
         });
 
 
-        binding.btB.setOnClickListener(view -> {
-            if (!binding.et1.getText().toString().isEmpty()){
-                binding.et1.setText(method(binding.et1.getText().toString()));
-                binding.et1.setSelection(binding.et1.getText().toString().length());
+        binding.btBackspace.setOnClickListener(view -> {
+            if (!binding.calculatedTextEt.getText().toString().isEmpty()){
+                binding.calculatedTextEt.setText(method(binding.calculatedTextEt.getText().toString()));
+                binding.calculatedTextEt.setSelection(binding.calculatedTextEt.getText().toString().length());
                 liveCal();
             }
         });
 
-        binding.btB.setOnLongClickListener(view -> {
+        binding.btBackspace.setOnLongClickListener(view -> {
             cdt = new CountDownTimer(3000000*500, 50) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    if (!binding.btB.isPressed()){
+                    if (!binding.btBackspace.isPressed()){
                         cdt.cancel();
                     }else {
-                        if (!binding.et1.getText().toString().isEmpty()){
-                            binding.et1.setText(method(binding.et1.getText().toString()));
-                            binding.et1.setSelection(binding.et1.getText().toString().length());
+                        if (!binding.calculatedTextEt.getText().toString().isEmpty()){
+                            binding.calculatedTextEt.setText(method(binding.calculatedTextEt.getText().toString()));
+                            binding.calculatedTextEt.setSelection(binding.calculatedTextEt.getText().toString().length());
                             liveCal();
                         }
                     }
@@ -235,16 +235,16 @@ public class FloatingCalculator extends Service {
         onClickBtNumber(binding.bt9, "9");
         onClickBtNumber(binding.bt0, "0");
         onClickBtNumber(binding.bt00, "00");
-        onClickBtNumber(binding.btI, "×");
-        onClickBtNumber(binding.btD, "÷");
+        onClickBtNumber(binding.btMultiply, "×");
+        onClickBtNumber(binding.btDivide, "÷");
         onClickBtNumber(binding.btDot, ".");
-        onClickBtNumber(binding.btM, "-");
-        onClickBtNumber(binding.btP, "%");
+        onClickBtNumber(binding.btMinus, "-");
+        onClickBtNumber(binding.btPercentage, "%");
         onClickBtNumber(binding.btPlus, "+");
 
 
-        binding.btE.setOnClickListener(view -> {
-            String aa = binding.et1.getText().toString();
+        binding.btEqualsTo.setOnClickListener(view -> {
+            String aa = binding.calculatedTextEt.getText().toString();
             if (!aa.isEmpty()){
 
                 if (aa.endsWith("+") || aa.endsWith("%") || aa.endsWith(".") || aa.endsWith("×") || aa.endsWith("÷") || aa.endsWith("-")){
@@ -271,21 +271,18 @@ public class FloatingCalculator extends Service {
                     calculate = method(calculate);
                     calculate = method(calculate);
                 }
-                Modules.CalHis calHis = new Modules.CalHis();
+                CalculatorHistory calHis = new CalculatorHistory(System.currentTimeMillis(), c, valll, 3);
                 calHis.setTime(System.currentTimeMillis());
-                calHis.setType(3);
-                calHis.setCal(c);
-                calHis.setValue(valll);
 
                 saveCalHisList(calHis);
-                binding.et1.setText(calculate);
+                binding.calculatedTextEt.setText(calculate);
             }
         });
     }
 
     private void onClickBtNumber(TextView button, String text){
         button.setOnClickListener(view -> {
-            String string = binding.et1.getText().toString();
+            String string = binding.calculatedTextEt.getText().toString();
             String center = "";
 
             if (string.isEmpty()){
@@ -446,18 +443,18 @@ public class FloatingCalculator extends Service {
                 }
             }
 
-            binding.et1.setText(string+center+text);
-            binding.et1.setSelection(binding.et1.getText().toString().length());
+            binding.calculatedTextEt.setText(string+center+text);
+            binding.calculatedTextEt.setSelection(binding.calculatedTextEt.getText().toString().length());
             liveCal();
 
         });
     }
 
     private void liveCal() {
-        String aa = binding.et1.getText().toString();
+        String aa = binding.calculatedTextEt.getText().toString();
         if (!aa.isEmpty()){
             if (aa.equals("-")){
-                binding.liveCalculator.setText("00");
+                binding.liveCalculatedText.setText("00");
                 return;
             }
             if (aa.endsWith("+") || aa.endsWith("%") || aa.endsWith(".") || aa.endsWith("×") || aa.endsWith("÷") || aa.endsWith("-")){
@@ -482,9 +479,9 @@ public class FloatingCalculator extends Service {
                 tt = method(tt);
                 tt = method(tt);
             }
-            binding.liveCalculator.setText(tt);
+            binding.liveCalculatedText.setText(tt);
         }else {
-            binding.liveCalculator.setText("00");
+            binding.liveCalculatedText.setText("00");
         }
     }
 
@@ -496,8 +493,8 @@ public class FloatingCalculator extends Service {
         return str;
     }
 
-    public void saveCalHisList(Modules.CalHis calHis){
-        List<Modules.CalHis> calHisList = getCalHisList();
+    public void saveCalHisList(CalculatorHistory calHis){
+        List<CalculatorHistory> calHisList = getCalHisList();
         if (calHisList == null){
             calHisList = new ArrayList<>();
         }
@@ -508,9 +505,9 @@ public class FloatingCalculator extends Service {
     }
 
     Gson gson = new Gson();
-    public List<Modules.CalHis> getCalHisList(){
+    public List<CalculatorHistory> getCalHisList(){
         String json = sharedPreferences.getString("CalHis", null);
-        Type type = new TypeToken<List<Modules.CalHis>>() {}.getType();
+        Type type = new TypeToken<List<CalculatorHistory>>() {}.getType();
         return gson.fromJson(json, type);
     }
 

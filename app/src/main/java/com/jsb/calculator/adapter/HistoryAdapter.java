@@ -14,8 +14,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.jsb.calculator.modules.Modules;
 import com.jsb.calculator.R;
+import com.jsb.calculator.modules.CalculatorHistory;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,12 +31,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private SharedPreferences sharedPreferences;
 
 
-    private List<Modules.CalHis> mData;
+    private List<CalculatorHistory> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private OnSize0 onSize0;
 
-    public HistoryAdapter(Context context, List<Modules.CalHis> data) {
+    public HistoryAdapter(Context context, List<CalculatorHistory> data) {
         this.mInflater = LayoutInflater.from(context);
         mContext = context;
         this.mData = data;
@@ -52,7 +52,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Modules.CalHis calHis = mData.get(position);
+        CalculatorHistory calHis = mData.get(position);
 
         if (calHis != null) {
             holder.textValue.setText(calHis.getValue()+" = "+calHis.getCal());
@@ -90,7 +90,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 }
 
             }else {
-                Modules.CalHis qrCode2 = mData.get(position-1);
+                CalculatorHistory qrCode2 = mData.get(position-1);
                 if (!isSameDay( new Date(qrCode2.getTime()), new Date(calHis.getTime()))) {
                     holder.textDate.setVisibility(View.VISIBLE);
 
@@ -161,7 +161,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
     }
 
-    Modules.CalHis getItem(int id) {
+    CalculatorHistory getItem(int id) {
         return mData.get(id);
     }
 
@@ -190,7 +190,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         return fmt.format(date1).equals(fmt.format(date2));
     }
 
-    public void updateList(List<Modules.CalHis> list){
+    public void updateList(List<CalculatorHistory> list){
         mData = list;
         notifyDataSetChanged();
     }

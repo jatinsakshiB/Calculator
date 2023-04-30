@@ -156,7 +156,7 @@
                     android:layout_marginEnd="30dp"
                     android:inputType="text"
                     android:background="#00333333"
-                    android:id="@+id/et1"
+                    android:id="@+id/calculatedTextEt"
                     android:textSize="30sp"
                     android:layout_height="55dp"/>
 
@@ -166,7 +166,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="10dp"
                     android:textColor="@color/keyboard_key"
-                    android:id="@+id/live_calculator"
+                    android:id="@+id/liveCalculatedText"
                     android:text="00"
                     android:layout_height="wrap_content"/>
 
@@ -224,7 +224,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:id="@+id/btC"
+                android:id="@+id/btClear"
                 android:textColor="@color/keyboard_key"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -235,7 +235,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:id="@+id/btP"
+                android:id="@+id/btPercentage"
                 android:background="@drawable/button_r1"
                 android:textColor="@color/keyboard_key"
                 android:layout_weight="1"
@@ -246,7 +246,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:id="@+id/btB"
+                android:id="@+id/btBackspace"
                 android:layout_weight="1"
                 android:background="@drawable/button_r1"
                 android:gravity="center"
@@ -258,7 +258,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:id="@+id/btD"
+                android:id="@+id/btDivide"
                 android:background="@drawable/button_r1"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -339,7 +339,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:id="@+id/btI"
+                android:id="@+id/btMultiply"
                 android:textColor="@color/keyboard_key"
                 android:layout_weight="1"
                 android:background="@drawable/button_r1"
@@ -427,7 +427,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:id="@+id/btM"
+                android:id="@+id/btMinus"
                 android:textColor="@color/keyboard_key"
                 android:layout_weight="1"
                 android:background="@drawable/button_r1"
@@ -593,7 +593,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:id="@+id/btE"
+                android:id="@+id/btEqualsTo"
                 android:layout_weight="1"
                 android:background="@drawable/button_r1"
                 android:textColor="@color/keyboard_key"
