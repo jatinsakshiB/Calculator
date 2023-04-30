@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="20dp"
+    android:viewportWidth="220"
+    android:viewportHeight="100">
+  <path
+      android:pathData="M95.73,16.1C97.58,16.07 101.29,16.01 103.15,15.98C109.89,38.97 116.55,61.98 123.05,85.04C120.42,85 117.8,84.97 115.17,84.93C109.26,61.83 101.83,39.15 95.73,16.1Z"
+      android:fillColor="@color/keyboard_key"/>
+  <path
+      android:pathData="M127.07,47.34C142.5,41.45 157.51,34.54 172.93,28.65C172.88,31.64 172.94,34.64 172.9,37.63C161.11,42 149.47,46.78 137.84,51.56C149.52,56.14 161.1,60.99 172.84,65.4C172.87,68.39 172.93,71.39 172.94,74.38C157.56,68.43 142.52,61.63 127.15,55.63C127.1,52.86 127.1,50.11 127.07,47.34Z"
+      android:fillColor="@color/keyboard_key"/>
+  <path
+      android:pathData="M45,36C60.33,35.99 75.67,35.99 91,36.01C90.99,39 91,42 91,45C75.66,45.01 60.33,45.01 45,44.99C44.99,41.99 45,39 45,36Z"
+      android:fillColor="@color/keyboard_key"/>
+  <path
+      android:pathData="M45,56C60.33,55.99 75.67,55.99 91,56.01C90.99,59 91,62 91,65C75.66,65.01 60.33,65.01 45,64.99C44.99,61.99 45,59 45,56Z"
+      android:fillColor="@color/keyboard_key"/>
+</vector>

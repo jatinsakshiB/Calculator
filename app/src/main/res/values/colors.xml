@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red_200">#FF5252</color>
+    <color name="red_400">#FF1744</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#6CDAD9</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="teal_100">#1A018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="keyboard_bg">#E8E8E8</color><!-- E8E8E8 -->
+    <color name="keyboard_bg2">#F8F8F8</color><!-- E8E8E8 -->
+    <color name="keyboard_key">#8A000000</color><!-- 8A000000 -->
+    <color name="keyboard_key_click">#8A222222</color><!-- 8A000000 -->
+</resources>
