@@ -11,7 +11,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="80dp"
         app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/teal_700"
+        app:cardBackgroundColor="@color/colorPrimaryDark"
         android:layout_marginTop="30dp"
         android:layout_height="80dp">
 
@@ -42,9 +42,9 @@
         android:text="Appointments"
         android:gravity="center"
         android:id="@+id/text"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/teal_700"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>

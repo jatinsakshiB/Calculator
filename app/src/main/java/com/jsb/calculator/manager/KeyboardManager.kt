@@ -4,19 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 
 class KeyboardManager {
 
     companion object{
-        fun changeKeyboard(context: Context, launchKcPermission: ActivityResultLauncher<Intent>) {
+        fun changeKeyboard(context: Context, launchKcPermission: ActivityResultLauncher<Intent>? = null) {
             if (checkPermission(context)) {
                 (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                     .showInputMethodPicker()
             } else {
-                val enableIntent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)
-                enableIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                launchKcPermission.launch(enableIntent)
+                if (launchKcPermission == null){
+                    Toast.makeText(context, "Please grant permission to access the 'calculate' function on the keyboard.", Toast.LENGTH_LONG).show()
+                }else{
+                    val enableIntent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)
+                    enableIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    launchKcPermission.launch(enableIntent)
+                }
             }
         }
 

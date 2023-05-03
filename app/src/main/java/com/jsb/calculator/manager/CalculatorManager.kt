@@ -4,19 +4,25 @@ import android.os.CountDownTimer
 import android.widget.EditText
 import android.widget.TextView
 import com.jsb.calculator.enums.CalButtons
+import com.jsb.calculator.utils.equalsAny
+import com.jsb.calculator.utils.focus
+import com.jsb.calculator.utils.formatAllNumber
+import com.jsb.calculator.utils.formatNumber
+import com.jsb.calculator.utils.getLastNumber
 import com.jsb.calculator.utils.isNumber
 import com.jsb.calculator.utils.removeLast
 import org.mariuszgromada.math.mxparser.Expression
 
 
 class CalculatorManager(
-    val calculatedTextEt: EditText,
-    val liveCalculatedText: TextView
+    private val calculatedTextEt: EditText,
+    private val liveCalculatedText: TextView
 ) {
 
     var cdt: CountDownTimer? = null
 
     private var currentText = ""
+    private var calculated = currentText
 
 
     init {
@@ -29,40 +35,61 @@ class CalculatorManager(
         if (currentText.isNotEmpty()) {
             currentText = currentText.removeLast()
         }
+        calculate()
     }
 
     private fun handleClear() {
         currentText = ""
+        calculate()
     }
 
     private fun appendNumber(digit: String) {
-        currentText += digit
+        currentText += if (currentText.isNotEmpty()){
+            if (currentText.last().toString() == "%"){
+                "×$digit"
+            }else digit
+        }else digit
+        calculate()
     }
 
     private fun handleOperator(op: String) {
         // empty hai toh sirif minus hi laga sakte hai
-        if (op != "-"){
-            if (currentText.isEmpty()) return
-        }
-        // last char lenga currentText text se
-        val last = currentText.last().toString()
-
-        //ager last me plus hai toh or op me minus toh plus ko hatake minus karenga or ager kuch or hai jese Multiply, Divide to minus aa jayenga uske bad
-        if (op == "-"){
-            currentText += if (last == "+"){
-                currentText.removeLast()+op
-            }else{
-                op
+        if (currentText.isEmpty()) {
+            if (op == "-"){
+                currentText = op
             }
-            return
-        }
-
-        // check karenga last int hai kya ager int hao to hi Multiply, Divide, Plus add karenga warna Multiply, Divide, Plus, Minus ko remove karke new rakhenga
-        currentText += if (last.isNumber()){
-            op
         }else{
-            currentText.removeLast()+op
+            if (currentText != "-") {
+                // last char lenga currentText text se
+                val last = currentText.last().toString()
+
+                if (last == "-"){
+                    if (op == "-") return
+                    if (!currentText.removeLast().last().toString().isNumber()){
+                        currentText = currentText.removeLast()
+                        handleOperator(op)
+                        return
+                    }
+                }
+
+                //ager last me plus hai toh or op me minus toh plus ko hatake minus karenga or ager kuch or hai jese Multiply, Divide to minus aa jayenga uske bad
+                currentText = if (op == "-"){
+                    if (last.equalsAny("+.")){
+                        currentText.removeLast()+op
+                    }else{
+                        currentText+op
+                    }
+                }else{
+                    // check karenga last int hai kya ager int hao to hi Multiply, Divide, Plus add karenga warna Multiply, Divide, Plus, Minus ko remove karke new rakhenga
+                    if (last.isNumber() || last.equalsAny("%")){
+                        currentText+op
+                    }else{
+                        currentText.removeLast()+op
+                    }
+                }
+            }
         }
+        calculate()
     }
 
     private fun handleDot() {
@@ -70,74 +97,39 @@ class CalculatorManager(
             currentText += "0."
         }else{
             val last = currentText.last().toString()
-            currentText += if (last.isNumber()){
-                "$currentText."
-            }else{
-                "${currentText}0."
+            if (last != "."){
+                currentText = if (last.isNumber()){
+                    if ("." in currentText.getLastNumber()) {
+                        return
+                    }
+                    "$currentText."
+                }else{
+                    "${currentText}0."
+                }
             }
         }
+        calculate()
     }
 
     private fun handlePercentage() {
-        if (currentText.isEmpty()) return
-        val last = currentText.last().toString()
-        currentText += if (last.isNumber()){
-            "$currentText%"
-        }else{
-            currentText.removeLast()+'%'
+        if (currentText.isNotEmpty()){
+            val last = currentText.last().toString()
+            currentText = if (last.isNumber() || last == "%"){
+                "$currentText%"
+            }else{
+                currentText.removeLast()+'%'
+            }
         }
         calculate()
     }
 
     private fun handleEqualsTo() {
-
+        calculate()
+        currentText = calculated
+        calculate()
     }
 
 
-
-
-
-
-    /*fun handleEqualsTo(){
-        button.setOnClickListener {
-            var aa = calculatedTextEt.text.toString()
-            if (aa.isNotEmpty()) {
-                if (aa.endsWith("+") || aa.endsWith("%") || aa.endsWith(".") || aa.endsWith("×") || aa.endsWith(
-                        "÷"
-                    ) || aa.endsWith("-")
-                ) {
-                    aa = method(aa)
-                }
-                if (aa == "-") {
-                    return@setOnClickListener
-                }
-                val valll = aa
-                val string = aa
-                    .replace("x".toRegex(), "*")
-                    .replace("×".toRegex(), "*")
-                    .replace("÷".toRegex(), "/")
-                    .replace("%".toRegex(), "/100")
-                val e = Expression(string)
-                val c = e.calculate()
-                var calculate = c.toString()
-                if (calculate.endsWith(".0")) {
-                    calculate = method(calculate)
-                    calculate = method(calculate)
-                } else if (calculate.endsWith(".00")) {
-                    calculate = method(calculate)
-                    calculate = method(calculate)
-                    calculate = method(calculate)
-                }
-                val calHis = CalHis()
-                calHis.time = System.currentTimeMillis()
-                calHis.type = 0
-                calHis.cal = c
-                calHis.value = valll
-                saveCalHisList(calHis)
-                binding.calculatedTextEt.setText(calculate)
-            }
-        }
-    }*/
 
     fun addBt(button: TextView, buttonType: CalButtons) {
 
@@ -186,52 +178,47 @@ class CalculatorManager(
                 CalButtons.Clear -> handleClear()
             }
         }
-        calculate()
     }
 
 
     private fun calculate() {
-        /*var aa = binding!!.et1.text.toString()
-        if (!aa.isEmpty()) {
-            if (aa == "-") {
-                binding!!.liveCalculator.text = "00"
-                return
+        var calculate = currentText
+        if (calculate.isNotEmpty()){
+            var last = calculate.last().toString()
+            if (!last.isNumber() && last != "%"){
+                calculate = calculate.removeLast()
+                if (calculate.isNotEmpty()) {
+                    last = calculate.last().toString()
+                    if (!last.isNumber() && last != "%"){
+                        calculate = calculate.removeLast()
+                    }
+                }
             }
-            if (aa.endsWith("+") || aa.endsWith("%") || aa.endsWith(".") || aa.endsWith("×") || aa.endsWith(
-                    "÷"
-                ) || aa.endsWith("-")
-            ) {
-                aa = method(aa)
-            }
-            if (aa == "-") {
-                return
-            }
-            val string231 = aa
-                .replace("x".toRegex(), "*")
-                .replace("×".toRegex(), "*")
-                .replace("÷".toRegex(), "/")
-                .replace("%".toRegex(), "/100")
-            val e = Expression(string231)
-            var tt = e.calculate().toString()
-            if (tt.endsWith(".0")) {
-                tt = method(tt)
-                tt = method(tt)
-            } else if (tt.endsWith(".00")) {
-                tt = method(tt)
-                tt = method(tt)
-                tt = method(tt)
-            }
-            binding!!.liveCalculator.text = tt
-        } else {
-            binding!!.liveCalculator.text = "00"
-        }*/
+            if (calculate.isNotEmpty()){
+                calculate = calculate
+                    .replace("x", "*")
+                    .replace("×", "*")
+                    .replace("÷", "/")
+                    .replace("%", "/100")
 
+
+                val expression = Expression(calculate)
+                calculated = expression.calculate().toString()
+                calculated = calculated.replace("NaN", "")
+                // remove unnecessary 00 and dot
+                calculated = calculated.replace(Regex("(\\.\\d*?)0+([^\\d]|$)"), "$1$2")
+                calculated = calculated.replace(Regex("\\.$"), "")
+            }
+        }else{
+            calculated = "0"
+        }
         updateText()
     }
 
-    fun updateText(){
-        calculatedTextEt.setText(currentText)
-        liveCalculatedText.text = "00"
+    private fun updateText(){
+        calculatedTextEt.setText(currentText.formatAllNumber())
+        liveCalculatedText.text = calculated.formatNumber()
+        calculatedTextEt.focus()
     }
 
 }

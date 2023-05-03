@@ -27,7 +27,6 @@ class HomeActivity : AppCompatActivity() {
     lateinit var binding: ActivityHomeBinding
 
     lateinit var adsManager: AdsManager
-    lateinit var launchKcPermission: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +56,12 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
-        launchKcPermission = registerForActivityResult(
+        val launchKcPermission = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            KeyboardManager.changeKeyboard(this, launchKcPermission)
+            KeyboardManager.changeKeyboard(this)
         }
-        adapter.addItem(HomeData("Keyboard Calculator", R.drawable.ic_keyboard_white){
+        adapter.addItem(HomeData("Keyboard\nCalculator", R.drawable.ic_keyboard_white){
             KeyboardManager.changeKeyboard(this, launchKcPermission)
         })
 
@@ -85,14 +84,14 @@ class HomeActivity : AppCompatActivity() {
         }else{
             R.drawable.ic_floating_cal_white
         }
-        adapter.addItem(HomeData("Floating Calculator", fcImage){
+        adapter.addItem(HomeData("Floating\nCalculator", fcImage){
             if (fcm.checkPermission()){
                 val fcImage = if (fcm.toggle()){
                     R.drawable.ic_floating_cal_off_white
                 }else{
                     R.drawable.ic_floating_cal_white
                 }
-                adapter.update("Floating Calculator", fcImage)
+                adapter.update("Floating\nCalculator", fcImage)
             }else{
                 fcm.requestPermission(launchFcmPermission)
             }
@@ -102,7 +101,7 @@ class HomeActivity : AppCompatActivity() {
             launchActivities.launch(Intent(this, HistoryActivity::class.java))
         })
 
-        adapter.addItem(HomeData("Customize Keyboard", R.drawable.ic_baseline_text_format_24){
+        adapter.addItem(HomeData("Customize\nKeyboard", R.drawable.ic_baseline_text_format_24){
             launchActivities.launch(Intent(this, CustomizeKeyboardActivity::class.java))
         })
 

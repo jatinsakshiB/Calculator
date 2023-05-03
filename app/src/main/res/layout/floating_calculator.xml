@@ -38,7 +38,7 @@
         <ImageView
             android:layout_width="50dp"
             android:background="@drawable/flo_cal_bg"
-            android:backgroundTint="@color/teal_700"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:src="@drawable/ic_calculator2"
             android:id="@+id/showCal"
             android:visibility="gone"

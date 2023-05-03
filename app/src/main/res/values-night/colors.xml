@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#6CDAD9</color>
+    <color name="colorPrimaryDark">#FF018786</color>
+    <color name="colorPrimaryLight">#1A018786</color>
+    <color name="black">#FFFFFFFF</color>
+    <color name="white">#FF000000</color>
+
+    <color name="onlyBlack">#FF000000</color>
+    <color name="onlyWhite">#FFFFFFFF</color>
+
+    <color name="background">#333333</color>
+    <color name="keyboard_bg">#333333</color><!-- E8E8E8 -->
+    <color name="keyboard_bg2">#171717</color><!-- E8E8E8 -->
+    <color name="keyboard_key">#CCFFFFFF</color><!-- 8A000000 -->
+    <color name="keyboard_key_click">#33E4E4E4</color><!-- 8A000000 -->
+
+</resources>
