@@ -24,7 +24,7 @@ class CalculatorActivity : AppCompatActivity() {
     }
 
     private fun setUpView() {
-        val cm = CalculatorManager(binding.calculatedTextEt, binding.liveCalculatedText)
+        val cm = CalculatorManager(binding.calculatedTextEt, binding.liveCalculatedText, 0)
 
         cm.addBt(binding.bt1, CalButtons.One)
         cm.addBt(binding.bt2, CalButtons.Two)

@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import android.widget.EditText
 import android.widget.TextView
 import com.jsb.calculator.enums.CalButtons
+import com.jsb.calculator.modules.CalculatorHistory
 import com.jsb.calculator.utils.equalsAny
 import com.jsb.calculator.utils.focus
 import com.jsb.calculator.utils.formatAllNumber
@@ -16,7 +17,8 @@ import org.mariuszgromada.math.mxparser.Expression
 
 class CalculatorManager(
     private val calculatedTextEt: EditText,
-    private val liveCalculatedText: TextView
+    private val liveCalculatedText: TextView,
+    private val calculateFrom: Int
 ) {
 
     var cdt: CountDownTimer? = null
@@ -126,7 +128,7 @@ class CalculatorManager(
     private fun handleEqualsTo() {
         calculate()
         currentText = calculated
-        calculate()
+        calculate(true)
     }
 
 
@@ -181,7 +183,7 @@ class CalculatorManager(
     }
 
 
-    private fun calculate() {
+    private fun calculate(save: Boolean = false) {
         var calculate = currentText
         if (calculate.isNotEmpty()){
             var last = calculate.last().toString()
@@ -204,10 +206,21 @@ class CalculatorManager(
 
                 val expression = Expression(calculate)
                 calculated = expression.calculate().toString()
-                calculated = calculated.replace("NaN", "")
+                calculated = calculated.filter { it.isDigit() || it == '.'|| it == '-' }
                 // remove unnecessary 00 and dot
                 calculated = calculated.replace(Regex("(\\.\\d*?)0+([^\\d]|$)"), "$1$2")
                 calculated = calculated.replace(Regex("\\.$"), "")
+
+                if (save){
+                    LocalStorage(calculatedTextEt.context).saveCalculatorHistory(
+                        CalculatorHistory(
+                            System.currentTimeMillis(),
+                            calculated.toDouble(),
+                            calculatedTextEt.text.toString(),
+                            calculateFrom
+                        )
+                    )
+                }
             }
         }else{
             calculated = "0"

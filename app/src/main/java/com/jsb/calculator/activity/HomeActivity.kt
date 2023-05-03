@@ -1,8 +1,12 @@
 package com.jsb.calculator.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.IntentSender.SendIntentException
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +25,7 @@ import com.jsb.calculator.manager.AdsManager
 import com.jsb.calculator.manager.FloatingCalculatorManager
 import com.jsb.calculator.manager.KeyboardManager
 import com.jsb.calculator.modules.HomeData
+import com.jsb.calculator.utils.focus
 
 class HomeActivity : AppCompatActivity() {
 
@@ -32,7 +37,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         AdsManager(this).initialize {
             adsManager = it
             it.setUpBanner(binding.adView)
@@ -63,6 +67,7 @@ class HomeActivity : AppCompatActivity() {
         }
         adapter.addItem(HomeData("Keyboard\nCalculator", R.drawable.ic_keyboard_white){
             KeyboardManager.changeKeyboard(this, launchKcPermission)
+            binding.editText.requestFocus()
         })
 
         adapter.addItem(HomeData("Calculator", R.drawable.ic_calculator2){
@@ -115,6 +120,42 @@ class HomeActivity : AppCompatActivity() {
 
 
 
+        registerForInputChange()
+    }
+
+
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == Intent.ACTION_INPUT_METHOD_CHANGED) {
+
+                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+                // Get a list of all available input methods
+                val inputMethodList = inputMethodManager.inputMethodList
+                val inputMethodPackageNames = inputMethodList.map { it.packageName }
+                println(inputMethodPackageNames)
+                // Check if the current input method is your keyboard
+                if (inputMethodPackageNames.contains(packageName)) {
+
+                    inputMethodManager.showSoftInput(binding.editText, InputMethodManager.SHOW_IMPLICIT)
+                }
+            }
+        }
+    }
+
+    private fun registerForInputChange(){
+        val filter = IntentFilter(Intent.ACTION_INPUT_METHOD_CHANGED)
+        registerReceiver(receiver, filter)
+
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     private fun rateUs() {
