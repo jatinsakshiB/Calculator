@@ -1,198 +1,86 @@
-package com.jsb.calculator.adapter;
+package com.jsb.calculator.adapter
 
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.jsb.calculator.R
+import com.jsb.calculator.databinding.ItemHistoryBinding
+import com.jsb.calculator.manager.LocalStorage
+import com.jsb.calculator.modules.CalculatorHistory
+import com.jsb.calculator.utils.formatNumber
+import com.jsb.calculator.utils.isSameDay
+import com.jsb.calculator.utils.toFormatted
+import java.text.SimpleDateFormat
+import java.util.Date
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.text.format.DateUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+class HistoryAdapter(private var data: MutableList<CalculatorHistory>, private val onItemChange: ((List<CalculatorHistory>) -> Unit)) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.gson.Gson;
-import com.jsb.calculator.R;
-import com.jsb.calculator.modules.CalculatorHistory;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
-
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-    private Context mContext;
-    private Date date  = null;
-    private Gson gson = new Gson();
-    private SharedPreferences sharedPreferences;
-
-
-    private List<CalculatorHistory> mData;
-    private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
-    private OnSize0 onSize0;
-
-    public HistoryAdapter(Context context, List<CalculatorHistory> data) {
-        this.mInflater = LayoutInflater.from(context);
-        mContext = context;
-        this.mData = data;
-
-        sharedPreferences = context.getSharedPreferences("com.jsb.calculator", MODE_PRIVATE);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemHistoryBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.each_history, parent, false);
-        return new ViewHolder(view);
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(position)
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        CalculatorHistory calHis = mData.get(position);
 
-        if (calHis != null) {
-            holder.textValue.setText(calHis.getValue()+" = "+calHis.getCal());
-            holder.textTime.setText(new SimpleDateFormat("hh:mm a").format(new Date(calHis.getTime())));
-            holder.textType.setText(calHis.getCal()+"");
+    override fun getItemCount(): Int {
+        return data.size
+    }
 
-            if (calHis.getType() == 0){
-                holder.imageType.setBackgroundResource(R.drawable.ic_calculator2);
-            }else if (calHis.getType() == 1){
-                holder.imageType.setBackgroundResource(R.drawable.ic_keyboard_white);
-            }else if (calHis.getType() == 2){
-                holder.imageType.setBackgroundResource(R.drawable.ic_keyboard_white);
-            }else if (calHis.getType() == 3){
-                holder.imageType.setBackgroundResource(R.drawable.ic_floating_cal_white);
+    fun clear() {
+        data.clear()
+        notifyDataSetChanged()
+        onItemChange(data)
+    }
+
+    inner class ViewHolder(private val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(position: Int) {
+            val item = data[position]
+
+            binding.valueText.text = "${item.value} = ${item.cal.toString().formatNumber()}"
+            binding.timeText.text =SimpleDateFormat("hh:mm a").format(Date(item.time))
+            binding.calculatedText.text = item.cal.toString().formatNumber()
+
+            when (item.type) {
+                0 -> {
+                    binding.imageType.setBackgroundResource(R.drawable.ic_calculator2)
+                }
+                1 -> {
+                    binding.imageType.setBackgroundResource(R.drawable.ic_keyboard_white)
+                }
+                2 -> {
+                    binding.imageType.setBackgroundResource(R.drawable.ic_keyboard_white)
+                }
+                3 -> {
+                    binding.imageType.setBackgroundResource(R.drawable.ic_floating_cal_white)
+                }
             }
-
-
-
-
-            holder.textDate.setVisibility(View.GONE);
-
-            if (position == 0){
-                holder.textDate.setVisibility(View.VISIBLE);
-
-                Calendar smsTime = Calendar.getInstance();
-                smsTime.setTime(new Date(calHis.getTime()));
-                Calendar now = Calendar.getInstance();
-
-                if (DateUtils.isToday(calHis.getTime())) {
-                    holder.textDate.setText("Today");
-                }else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
-                    holder.textDate.setText("Yesterday");
+            binding.dateTv.visibility = View.GONE
+            if (position == 0) {
+                binding.dateTv.visibility = View.VISIBLE
+                binding.dateTv.text = Date(item.time).toFormatted()
+            } else {
+                val time = data[position - 1].time
+                if (!Date(time).isSameDay(Date(item.time))) {
+                    binding.dateTv.visibility = View.VISIBLE
+                    binding.dateTv.text = Date(item.time).toFormatted()
                 } else {
-                    holder.textDate.setText(new SimpleDateFormat("MMM dd, yyyy").format(new Date(calHis.getTime())));
-                }
-
-            }else {
-                CalculatorHistory qrCode2 = mData.get(position-1);
-                if (!isSameDay( new Date(qrCode2.getTime()), new Date(calHis.getTime()))) {
-                    holder.textDate.setVisibility(View.VISIBLE);
-
-                    Calendar smsTime = Calendar.getInstance();
-                    smsTime.setTime(new Date(calHis.getTime()));
-                    Calendar now = Calendar.getInstance();
-
-                    if (DateUtils.isToday(calHis.getTime())) {
-                        holder.textDate.setText("Today");
-                    }else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
-                        holder.textDate.setText("Yesterday");
-                    } else {
-                        holder.textDate.setText(new SimpleDateFormat("MMM dd, yyyy").format(new Date(calHis.getTime())));
-                    }
-                }else {
-                    holder.textDate.setVisibility(View.GONE);
+                    binding.dateTv.visibility = View.GONE
                 }
             }
-
-            
-
-            holder.deleteBt.setOnClickListener(view -> {
-                mData.remove(calHis);
-                String json = gson.toJson(mData);
-                sharedPreferences.edit().putString("CalHis", json).apply();
-                notifyDataSetChanged();
-                if (mData.size() == 0){
-                    if (onSize0 != null) onSize0.onSize0();
-                }
-            });
-
-
+            binding.deleteBt.setOnClickListener {
+                data.remove(item)
+                LocalStorage(it.context).saveCalculatorHistoryList(data)
+                notifyDataSetChanged()
+                onItemChange(data)
+            }
         }
     }
 
-    // total number of rows
-    @Override
-    public int getItemCount() {
-        return mData.size();
-    }
-
-
-    // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView textType,textValue, textTime, textDate;
-        ImageView imageType, deleteBt;
-        CardView cardView;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-
-            textType = (TextView) itemView.findViewById(R.id.typeText);
-            textValue = (TextView) itemView.findViewById(R.id.valueText);
-            textTime = (TextView) itemView.findViewById(R.id.timeText);
-            textDate = (TextView) itemView.findViewById(R.id.date_tv);
-
-            imageType = (ImageView) itemView.findViewById(R.id.image_type);
-            deleteBt = (ImageView) itemView.findViewById(R.id.delete_bt);
-
-            cardView = (CardView) itemView.findViewById(R.id.layout_cv);
-
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-        }
-    }
-
-    CalculatorHistory getItem(int id) {
-        return mData.get(id);
-    }
-
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    public void setOnSize0(OnSize0 onSize0) {
-        this.onSize0 = onSize0;
-        if (mData.size() <= 0){
-            onSize0.onSize0();
-        }
-    }
-
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public interface OnSize0 {
-        void onSize0();
-    }
-
-
-    public static boolean isSameDay(Date date1, Date date2) {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        return fmt.format(date1).equals(fmt.format(date2));
-    }
-
-    public void updateList(List<CalculatorHistory> list){
-        mData = list;
-        notifyDataSetChanged();
-    }
 
 }

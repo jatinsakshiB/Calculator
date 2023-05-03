@@ -1,111 +1,54 @@
-package com.jsb.calculator.activity;
+package com.jsb.calculator.activity
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.jsb.calculator.adapter.HistoryAdapter
+import com.jsb.calculator.databinding.ActivityHistoryBinding
+import com.jsb.calculator.manager.AdsManager
+import com.jsb.calculator.manager.LocalStorage
+import com.jsb.calculator.modules.CalculatorHistory
+import java.util.Collections
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+class HistoryActivity : AppCompatActivity() {
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.jsb.calculator.adapter.HistoryAdapter;
-import com.jsb.calculator.databinding.ActivityHistoryBinding;
-import com.jsb.calculator.modules.CalculatorHistory;
+    lateinit var binding: ActivityHistoryBinding
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityHistoryBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-public class HistoryActivity extends AppCompatActivity {
-
-    private ActivityHistoryBinding binding;
-    private Activity activity;
-    private SharedPreferences sharedPreferences;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityHistoryBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        activity = this;
-        sharedPreferences = getSharedPreferences("com.jsb.calculator", MODE_PRIVATE);
-
-
-
-        List<CalculatorHistory> calHisList = getCalHisList();
-        Collections.reverse(calHisList);
-
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        binding.listView.setLayoutManager(llm);
-
-        //ollections.reverse(qrCodes);
-
-        HistoryAdapter myAppointmentsAdapter = new HistoryAdapter(activity, calHisList);
-        binding.listView.setAdapter(myAppointmentsAdapter);
-        binding.listView.setVisibility(View.VISIBLE);
-
-        myAppointmentsAdapter.setOnSize0(() -> {
-            binding.errorTv.setVisibility(View.VISIBLE);
-            binding.listView.setVisibility(View.GONE);
-        });
-
-        showAds();
-
-    }
-
-    private void showAds() {
-        MobileAds.initialize(this);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        binding.adView.loadAd(adRequest);
-
-        binding.adView.setAdListener(new AdListener(){
-            @Override
-            public void onAdLoaded() {
-                Log.e("tasting", "onCreate: onAdLoaded" );
-                super.onAdLoaded();
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                Log.e("tasting", "onCreate: onAdFailedToLoad: "+loadAdError.toString() );
-                super.onAdFailedToLoad(loadAdError);
-            }
-
-            @Override
-            public void onAdClicked() {
-                Log.e("tasting", "onCreate: onAdClicked" );
-                super.onAdClicked();
-            }
-
-            @Override
-            public void onAdImpression() {
-                Log.e("tasting", "onCreate: onAdImpression" );
-                super.onAdImpression();
-            }
-        });
-    }
-
-
-
-    Gson gson = new Gson();
-
-    public List<CalculatorHistory> getCalHisList() {
-        String json = sharedPreferences.getString("CalHis", null);
-        if (json == null){
-            return new ArrayList<>();
+        AdsManager(this).initialize {
+            it.setUpBanner(binding.adView)
         }
-        Type type = new TypeToken<List<CalculatorHistory>>() {
-        }.getType();
-        return gson.fromJson(json, type);
+
+        val calHisList: List<CalculatorHistory> = LocalStorage(this).getCalculatorHistoryList().reversed()
+        if (calHisList.isEmpty()){
+            binding.errorTv.visibility = View.VISIBLE
+            binding.deleteAllBt.visibility = View.GONE
+        }else{
+            binding.errorTv.visibility = View.GONE
+            binding.deleteAllBt.visibility = View.VISIBLE
+        }
+        binding.listView.layoutManager = LinearLayoutManager(this)
+        val adapter = HistoryAdapter(calHisList.toMutableList()){
+            if (it.isEmpty()){
+                binding.errorTv.visibility = View.VISIBLE
+                binding.deleteAllBt.visibility = View.GONE
+            }else{
+                binding.errorTv.visibility = View.GONE
+                binding.deleteAllBt.visibility = View.VISIBLE
+            }
+        }
+        binding.listView.adapter = adapter
+
+
+        binding.deleteAllBt.setOnClickListener {
+            LocalStorage(this).saveCalculatorHistoryList(listOf())
+            adapter.clear()
+        }
+
     }
 }

@@ -25,7 +25,7 @@ class CalculatorManager(
 
     private var currentText = ""
     private var calculated = currentText
-
+    private var calculatedDouble: Double = 0.0
 
     init {
         calculatedTextEt.keyListener = null
@@ -127,8 +127,19 @@ class CalculatorManager(
 
     private fun handleEqualsTo() {
         calculate()
+        LocalStorage(calculatedTextEt.context).saveCalculatorHistory(
+            CalculatorHistory(
+                System.currentTimeMillis(),
+                calculatedDouble,
+                calculatedTextEt.text.toString(),
+                calculateFrom
+            )
+        )
         currentText = calculated
-        calculate(true)
+        calculated = ""
+        calculatedTextEt.setText(currentText.formatNumber())
+        liveCalculatedText.text = calculated.formatNumber()
+        calculatedTextEt.focus()
     }
 
 
@@ -183,7 +194,7 @@ class CalculatorManager(
     }
 
 
-    private fun calculate(save: Boolean = false) {
+    private fun calculate() {
         var calculate = currentText
         if (calculate.isNotEmpty()){
             var last = calculate.last().toString()
@@ -205,22 +216,12 @@ class CalculatorManager(
 
 
                 val expression = Expression(calculate)
-                calculated = expression.calculate().toString()
-                calculated = calculated.filter { it.isDigit() || it == '.'|| it == '-' }
+                calculatedDouble =  expression.calculate()
+                calculated = calculatedDouble.toString()
                 // remove unnecessary 00 and dot
                 calculated = calculated.replace(Regex("(\\.\\d*?)0+([^\\d]|$)"), "$1$2")
                 calculated = calculated.replace(Regex("\\.$"), "")
 
-                if (save){
-                    LocalStorage(calculatedTextEt.context).saveCalculatorHistory(
-                        CalculatorHistory(
-                            System.currentTimeMillis(),
-                            calculated.toDouble(),
-                            calculatedTextEt.text.toString(),
-                            calculateFrom
-                        )
-                    )
-                }
             }
         }else{
             calculated = "0"

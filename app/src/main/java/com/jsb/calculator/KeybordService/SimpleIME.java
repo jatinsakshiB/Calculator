@@ -46,7 +46,7 @@ import com.jsb.calculator.Classes.Fonts;
 import com.jsb.calculator.activity.HomeActivity;
 import com.jsb.calculator.databinding.KeyboardBinding;
 import com.jsb.calculator.R;
-import com.jsb.calculator.Service.FloatingCalculator;
+import com.jsb.calculator.service.FloatingCalculator;
 import com.jsb.calculator.modules.CalculatorHistory;
 
 import org.mariuszgromada.math.mxparser.Expression;

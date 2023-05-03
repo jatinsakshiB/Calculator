@@ -9,7 +9,7 @@ import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import com.jsb.calculator.Service.FloatingCalculator
+import com.jsb.calculator.service.FloatingCalculator
 
 class FloatingCalculatorManager(var context: Context) {
 

@@ -1,9 +1,11 @@
 package com.jsb.calculator.utils
 
-import android.util.Log
 import android.widget.EditText
 import java.math.BigDecimal
+import java.text.DateFormat
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 
@@ -65,4 +67,14 @@ fun String.formatAllNumber(): String {
 fun Double.getNumberOfDecimals(): Int {
     val bigDecimalValue = BigDecimal(this)
     return bigDecimalValue.scale()
+}
+
+fun Date.isSameDay(toDate: Date): Boolean {
+    val fmt = SimpleDateFormat("yyyyMMdd")
+    return fmt.format(this) == fmt.format(toDate)
+}
+
+fun Date.toFormatted(): String {
+    val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
+    return dateFormat.format(this)
 }

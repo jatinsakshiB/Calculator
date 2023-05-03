@@ -12,6 +12,16 @@ class LocalStorage(val context: Context) {
     var sharedPreferences: SharedPreferences = context.getSharedPreferences("com.jsb.calculator", Context.MODE_PRIVATE)
 
     fun saveCalculatorHistory(calculatorHistory: CalculatorHistory) {
+        val calculatorHistoryMList = getCalculatorHistoryList().toMutableList()
+        calculatorHistoryMList.add(calculatorHistory)
+        saveCalculatorHistoryList(calculatorHistoryMList)
+    }
+    fun saveCalculatorHistoryList(calculatorHistoryList: List<CalculatorHistory>) {
+        val json = Gson().toJson(calculatorHistoryList)
+        sharedPreferences.edit().putString("CalHis", json).apply()
+    }
+
+    fun getCalculatorHistoryList(): List<CalculatorHistory>{
         val calculatorHistoryListString = sharedPreferences.getString("CalHis", null)
         val type = object : TypeToken<List<CalculatorHistory>>() {}.type
         val calculatorHistoryList = try {
@@ -19,9 +29,6 @@ class LocalStorage(val context: Context) {
         }catch (e: JsonSyntaxException){
             listOf<CalculatorHistory>()
         }
-        val calculatorHistoryMList = calculatorHistoryList.toMutableList()
-        calculatorHistoryMList.add(calculatorHistory)
-        val json = Gson().toJson(calculatorHistoryMList)
-        sharedPreferences.edit().putString("CalHis", json).apply()
+        return calculatorHistoryList
     }
 }
