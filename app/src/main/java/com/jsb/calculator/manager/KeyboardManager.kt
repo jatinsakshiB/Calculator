@@ -1,17 +1,24 @@
 package com.jsb.calculator.manager
 
+import android.R.attr.name
+import android.R.attr.text
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+
 
 class KeyboardManager {
 
     companion object{
         fun changeKeyboard(context: Context, launchKcPermission: ActivityResultLauncher<Intent>? = null) {
-            if (checkPermission(context)) {
+            val permission = checkPermission(context)
+            if (permission) {
                 (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                     .showInputMethodPicker()
             } else {
@@ -23,6 +30,10 @@ class KeyboardManager {
                     launchKcPermission.launch(enableIntent)
                 }
             }
+
+            Firebase.analytics.logEvent("change_keyboard", Bundle().apply {
+                putBoolean("permission", permission)
+            })
         }
 
         private fun checkPermission(context: Context): Boolean {

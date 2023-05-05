@@ -6,8 +6,6 @@ class Utils {
 
         var testMode = true
 
-
-
     }
 
 }

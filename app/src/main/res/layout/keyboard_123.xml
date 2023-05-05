@@ -268,7 +268,7 @@
 
             <ImageView
                 android:layout_width="40dp"
-                android:id="@+id/btKeyEnterNum"
+                android:id="@+id/btKeyEnter"
                 android:layout_weight="0"
                 android:background="@drawable/button_round"
                 android:src="@drawable/ic_arrow_right_alt"

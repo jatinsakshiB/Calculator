@@ -122,6 +122,7 @@ class CalculatorManager(
                 currentText.removeLast()+'%'
             }
         }
+        if (currentText == "%") currentText = ""
         calculate()
     }
 
@@ -143,6 +144,7 @@ class CalculatorManager(
     }
 
 
+    var onClick: (()->Unit)? = null
 
     fun addBt(button: TextView, buttonType: CalButtons) {
 
@@ -190,6 +192,7 @@ class CalculatorManager(
                 CalButtons.Backspace -> handleBackspace()
                 CalButtons.Clear -> handleClear()
             }
+            onClick?.let { it1 -> it1() }
         }
     }
 

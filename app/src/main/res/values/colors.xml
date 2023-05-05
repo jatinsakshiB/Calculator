@@ -16,6 +16,6 @@
     <color name="keyboard_bg">#E8E8E8</color><!-- E8E8E8 -->
     <color name="keyboard_bg2">#F8F8F8</color><!-- E8E8E8 -->
     <color name="keyboard_key">#8A000000</color><!-- 8A000000 -->
-    <color name="keyboard_key_click">#8A222222</color><!-- 8A000000 -->
+    <color name="keyboard_key_click">#33222222</color><!-- 8A000000 -->
 
 </resources>

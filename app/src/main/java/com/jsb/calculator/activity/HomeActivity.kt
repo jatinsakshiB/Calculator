@@ -18,6 +18,8 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.tasks.Task
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.jsb.calculator.R
 import com.jsb.calculator.adapter.HomeDataAdapter
 import com.jsb.calculator.databinding.ActivityHomeBinding
@@ -175,6 +177,9 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+        Firebase.analytics.logEvent("rate_us", Bundle().apply {
+            putBoolean("rate", false)
+        })
     }
 
     private fun shareApp() {
@@ -185,6 +190,11 @@ class HomeActivity : AppCompatActivity() {
             val shareMessage = "Get quick calculations on the go with this ${getString(R.string.app_name)} app! Try it now: https://play.google.com/store/apps/details?id=com.jsb.calculator"
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
             startActivity(Intent.createChooser(shareIntent, "Choose one"))
+
+
+            Firebase.analytics.logEvent("share_app", Bundle().apply {
+                putBoolean("share", true)
+            })
         } catch (e: Exception) {
             Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
         }

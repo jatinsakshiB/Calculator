@@ -79,7 +79,7 @@ class FloatingCalculator : Service() {
     }
 
     private fun setUpCalculator() {
-        val cm = CalculatorManager(binding.calculatedTextEt, binding.liveCalculatedText, 0)
+        val cm = CalculatorManager(binding.calculatedTextEt, binding.liveCalculatedText, 3)
 
         cm.addBt(binding.bt1, CalButtons.One)
         cm.addBt(binding.bt2, CalButtons.Two)

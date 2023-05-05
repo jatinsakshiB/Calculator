@@ -6,9 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.jsb.calculator.service.FloatingCalculator
 
 class FloatingCalculatorManager(var context: Context) {
@@ -35,7 +38,13 @@ class FloatingCalculatorManager(var context: Context) {
                 ).show()
             }
         }
-        return isRunning()
+
+        val isRunning = isRunning()
+        Firebase.analytics.logEvent("start_floating_keyboard", Bundle().apply {
+            putBoolean("start_or_stop", isRunning)
+        })
+
+        return isRunning
     }
 
     fun checkPermission(): Boolean {
