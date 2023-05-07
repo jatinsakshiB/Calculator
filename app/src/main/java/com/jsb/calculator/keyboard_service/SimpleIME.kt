@@ -16,6 +16,7 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import com.jsb.calculator.R
 import com.jsb.calculator.databinding.KeyboardBinding
@@ -46,8 +47,12 @@ class SimpleIME : InputMethodService() {
     override fun onStartInputView(info: EditorInfo, restarting: Boolean) {
         super.onStartInputView(info, restarting)
 
+        try {
+            textKeyboardViewManager?.refresh(currentInputConnection)
+        }catch (e: Exception){
+            FirebaseCrashlytics.getInstance().log(e.toString())
+        }
         calculatorKeyboardViewManager?.refresh()
-        textKeyboardViewManager?.refresh(currentInputConnection)
         numberKeyboardViewManager?.refresh()
     }
 
@@ -58,8 +63,12 @@ class SimpleIME : InputMethodService() {
 
 
         calculatorKeyboardViewManager = CalculatorKeyboardViewManager(this, binding.calculatorKeyboard)
-
-        textKeyboardViewManager = TextKeyboardViewManager(this, currentInputConnection, binding.normalKeyboard)
+        try {
+            textKeyboardViewManager = TextKeyboardViewManager(this, currentInputConnection, binding.normalKeyboard)
+        }catch (e: Exception){
+            textKeyboardViewManager = TextKeyboardViewManager(this, null, binding.normalKeyboard)
+            FirebaseCrashlytics.getInstance().log(e.toString())
+        }
 
         numberKeyboardViewManager = NumberKeyboardViewManager(this, binding.numPadKeyboard)
 
@@ -172,19 +181,22 @@ class SimpleIME : InputMethodService() {
 
     }
     fun playSound(veb: Long = 30){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            val vibrator = vibratorManager.defaultVibrator
-            vibrator.vibrate(VibrationEffect.createOneShot(veb, VibrationEffect.DEFAULT_AMPLITUDE))
-        } else {
-            val vibration = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (Build.VERSION.SDK_INT >= 26) {
-                vibration.vibrate(VibrationEffect.createOneShot(veb, VibrationEffect.DEFAULT_AMPLITUDE))
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                val vibrator = vibratorManager.defaultVibrator
+                vibrator.vibrate(VibrationEffect.createOneShot(veb, VibrationEffect.DEFAULT_AMPLITUDE))
             } else {
-                vibration.vibrate(veb)
+                val vibration = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                if (Build.VERSION.SDK_INT >= 26) {
+                    vibration.vibrate(VibrationEffect.createOneShot(veb, VibrationEffect.DEFAULT_AMPLITUDE))
+                } else {
+                    vibration.vibrate(veb)
+                }
             }
+        }catch (e: Exception){
+            FirebaseCrashlytics.getInstance().log(e.toString())
         }
-        println("test setVibrate")
     }
 
     fun showCalculatorKeyboard() {

@@ -26,7 +26,7 @@ import java.util.Locale
 
 class TextKeyboardViewManager(
     var context: SimpleIME,
-    var currentInputConnection: InputConnection,
+    var currentInputConnection: InputConnection?,
     private var binding: KeyboardAbcBinding
 ) : OnTouchListener {
 
@@ -44,7 +44,7 @@ class TextKeyboardViewManager(
 
     }
 
-    fun refresh(currentInputConnection: InputConnection){
+    fun refresh(currentInputConnection: InputConnection?){
         this.currentInputConnection = currentInputConnection
         context.addDoneButton(binding.btKeyEnter)
         setNormalKeys()
@@ -60,36 +60,40 @@ class TextKeyboardViewManager(
         }
 
         binding.btTextToSpeech.setOnClickListener {
-            try {
-                val text = currentInputConnection.getExtractedText(ExtractedTextRequest(), 0).text.toString()
-                if (text.isNotEmpty()) {
-                    textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+            if (currentInputConnection != null){
+                try {
+                    val text = currentInputConnection!!.getExtractedText(ExtractedTextRequest(), 0).text.toString()
+                    if (text.isNotEmpty()) {
+                        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+                    }
+                } catch (e: Exception) {
+                    context.showToast("Failed to use text-to-speech feature.")
                 }
-            } catch (e: Exception) {
-                context.showToast("Failed to use text-to-speech feature.")
             }
         }
 
         binding.btCopy.setOnClickListener {
-            val clipboard = context.getSystemService(InputMethodService.CLIPBOARD_SERVICE) as ClipboardManager
-            val text = if (!currentInputConnection.getSelectedText(0).isNullOrEmpty()){
-                currentInputConnection.getSelectedText(0)
-            }else{
-                try {
-                    val text = currentInputConnection.getExtractedText(ExtractedTextRequest(), 0).text.toString()
-                    currentInputConnection.setSelection(text.length, 0)
-                    text
-                } catch (e: Exception) {
-                    ""
+            if (currentInputConnection != null){
+                val clipboard = context.getSystemService(InputMethodService.CLIPBOARD_SERVICE) as ClipboardManager
+                val text = if (!currentInputConnection!!.getSelectedText(0).isNullOrEmpty()){
+                    currentInputConnection!!.getSelectedText(0)
+                }else{
+                    try {
+                        val text = currentInputConnection!!.getExtractedText(ExtractedTextRequest(), 0).text.toString()
+                        currentInputConnection!!.setSelection(text.length, 0)
+                        text
+                    } catch (e: Exception) {
+                        ""
+                    }
                 }
-            }
-            if (text.isNotEmpty()) {
-                val clip = ClipData.newPlainText(
-                    "jsb:" + System.currentTimeMillis(),
-                    text
-                )
-                clipboard.setPrimaryClip(clip)
-                context.showToast("Text copied")
+                if (text.isNotEmpty()) {
+                    val clip = ClipData.newPlainText(
+                        "jsb:" + System.currentTimeMillis(),
+                        text
+                    )
+                    clipboard.setPrimaryClip(clip)
+                    context.showToast("Text copied")
+                }
             }
         }
 

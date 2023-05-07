@@ -14,9 +14,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.Calculator.Main">
-        <item name="android:windowBackground">@drawable/splash_screen_background</item>
-    </style>
 
     <style name="Button_W" >
         <item name="colorPrimary">@color/white</item>

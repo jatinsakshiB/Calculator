@@ -33,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHomeBinding
 
-    lateinit var adsManager: AdsManager
+    private var adsManager: AdsManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
         val launchActivities = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            adsManager.showInterstitial(this)
+            adsManager?.showInterstitial(this)
         }
 
 
@@ -120,6 +120,9 @@ class HomeActivity : AppCompatActivity() {
             rateUs()
         })
 
+        adapter.addItem(HomeData("Settings", R.drawable.round_settings){
+            launchActivities.launch(Intent(this, CustomizeKeyboardActivity::class.java))
+        })
 
 
         registerForInputChange()
