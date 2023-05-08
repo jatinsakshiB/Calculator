@@ -54,6 +54,19 @@ class SimpleIME : InputMethodService() {
         }
         calculatorKeyboardViewManager?.refresh()
         numberKeyboardViewManager?.refresh()
+
+        when (LocalStorage(this).getDefKeyboard()) {
+            "calculator" -> {
+                showCalculatorKeyboard()
+            }
+            "number" -> {
+                showNumberKeyboard()
+            }
+            else -> {
+                showNormalKeyboard()
+            }
+        }
+
     }
 
 

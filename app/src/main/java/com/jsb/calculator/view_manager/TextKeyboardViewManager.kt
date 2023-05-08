@@ -327,61 +327,47 @@ class TextKeyboardViewManager(
                 binding.btCaps.setImageResource(R.drawable.ic_caps3)
             }
         }
-        if (caps) {
-            binding.btKey1.text = font.bigQ
-            binding.btKey2.text = font.bigW
-            binding.btKey3.text = font.bigE
-            binding.btKey4.text = font.bigR
-            binding.btKey5.text = font.bigT
-            binding.btKey6.text = font.bigY
-            binding.btKey7.text = font.bigU
-            binding.btKey8.text = font.bigI
-            binding.btKey9.text = font.bigO
-            binding.btKey10.text = font.bigP
-            binding.btKey11.text = font.bigA
-            binding.btKey12.text = font.bigS
-            binding.btKey13.text = font.bigD
-            binding.btKey14.text = font.bigF
-            binding.btKey15.text = font.bigG
-            binding.btKey16.text = font.bigH
-            binding.btKey17.text = font.bigJ
-            binding.btKey18.text = font.bigK
-            binding.btKey19.text = font.bigL
-            binding.btKey20.text = font.bigZ
-            binding.btKey21.text = font.bigX
-            binding.btKey22.text = font.bigC
-            binding.btKey23.text = font.bigV
-            binding.btKey24.text = font.bigB
-            binding.btKey25.text = font.bigN
-            binding.btKey26.text = font.bigM
-        } else {
-            binding.btKey1.text = font.q
-            binding.btKey2.text = font.w
-            binding.btKey3.text = font.e
-            binding.btKey4.text = font.r
-            binding.btKey5.text = font.t
-            binding.btKey6.text = font.y
-            binding.btKey7.text = font.u
-            binding.btKey8.text = font.i
-            binding.btKey9.text = font.o
-            binding.btKey10.text = font.p
-            binding.btKey11.text = font.a
-            binding.btKey12.text = font.s
-            binding.btKey13.text = font.d
-            binding.btKey14.text = font.f
-            binding.btKey15.text = font.g
-            binding.btKey16.text = font.h
-            binding.btKey17.text = font.j
-            binding.btKey18.text = font.k
-            binding.btKey19.text = font.l
-            binding.btKey20.text = font.z
-            binding.btKey21.text = font.x
-            binding.btKey22.text = font.c
-            binding.btKey23.text = font.v
-            binding.btKey24.text = font.b
-            binding.btKey25.text = font.n
-            binding.btKey26.text = font.m
+
+        val keys: List<String> = if (LocalStorage(context).getKeyboardType() == "abcde"){
+            if (caps) {
+                font.toBigABCDEList()
+            } else {
+                font.toABCDEFList()
+            }
+        }else{
+            if (caps) {
+                font.toBigQWERTYList()
+            } else {
+                font.toQWERTYList()
+            }
         }
+
+        binding.btKey1.text = keys[0]
+        binding.btKey2.text = keys[1]
+        binding.btKey3.text = keys[2]
+        binding.btKey4.text = keys[3]
+        binding.btKey5.text = keys[4]
+        binding.btKey6.text = keys[5]
+        binding.btKey7.text = keys[6]
+        binding.btKey8.text = keys[7]
+        binding.btKey9.text = keys[8]
+        binding.btKey10.text = keys[9]
+        binding.btKey11.text = keys[10]
+        binding.btKey12.text = keys[11]
+        binding.btKey13.text = keys[12]
+        binding.btKey14.text = keys[13]
+        binding.btKey15.text = keys[14]
+        binding.btKey16.text = keys[15]
+        binding.btKey17.text = keys[16]
+        binding.btKey18.text = keys[17]
+        binding.btKey19.text = keys[18]
+        binding.btKey20.text = keys[19]
+        binding.btKey21.text = keys[20]
+        binding.btKey22.text = keys[21]
+        binding.btKey23.text = keys[22]
+        binding.btKey24.text = keys[23]
+        binding.btKey25.text = keys[24]
+        binding.btKey26.text = keys[25]
     }
    
 

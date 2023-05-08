@@ -7,7 +7,7 @@
 
 
     <string name="bannerAddId">ca-app-pub-6709629336260276/3394924107</string>
-
+    <string name="title_activity_settings">SettingsActivity</string>
 
 
 </resources>

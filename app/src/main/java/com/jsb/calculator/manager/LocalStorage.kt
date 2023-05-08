@@ -3,6 +3,7 @@ package com.jsb.calculator.manager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.preference.PreferenceManager
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
@@ -15,12 +16,15 @@ import java.lang.Exception
 
 class LocalStorage(val context: Context) {
 
-    var sharedPreferences: SharedPreferences = context.getSharedPreferences("com.jsb.calculator", Context.MODE_PRIVATE)
+    private var sharedPreferences: SharedPreferences = context.getSharedPreferences("com.jsb.calculator", Context.MODE_PRIVATE)
+    var defaultSharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     fun saveCalculatorHistory(calculatorHistory: CalculatorHistory) {
-        val calculatorHistoryMList = getCalculatorHistoryList().toMutableList()
-        calculatorHistoryMList.add(calculatorHistory)
-        saveCalculatorHistoryList(calculatorHistoryMList)
+        if (defaultSharedPreferences.getBoolean("settingsSaveHistory", true)){
+            val calculatorHistoryMList = getCalculatorHistoryList().toMutableList()
+            calculatorHistoryMList.add(calculatorHistory)
+            saveCalculatorHistoryList(calculatorHistoryMList)
+        }
     }
     fun saveCalculatorHistoryList(calculatorHistoryList: List<CalculatorHistory>) {
         val json = Gson().toJson(calculatorHistoryList)
@@ -64,6 +68,24 @@ class LocalStorage(val context: Context) {
         return !fontString.isNullOrEmpty()
     }
 
+    fun getKeyboardType(): String{
+        val keyboardType = defaultSharedPreferences.getString("settingsTextKeyboardType", "qwert")
+        return keyboardType ?: "qwert"
+    }
+
+    fun getDefaultCurrency(): String{
+        val defaultCurrency = defaultSharedPreferences.getString("settingsDefaultCurrency", "₹")
+        return defaultCurrency ?: "₹"
+    }
+
+    fun saveDefaultCurrency(currency: String){
+        defaultSharedPreferences.edit().putString("settingsDefaultCurrency", currency).apply()
+    }
+
+    fun getSubmitAction(): String{
+        val submitAction = defaultSharedPreferences.getString("settingsSubmitAction", "text")
+        return submitAction ?: "text"
+    }
 
     fun saveDefKeyboard(keyboard: String){
         sharedPreferences.edit().putString("defKeyboard", keyboard).apply()
@@ -74,6 +96,20 @@ class LocalStorage(val context: Context) {
     }
 
     fun getDefKeyboard() : String{
-        return sharedPreferences.getString("defKeyboard", "calculator") ?: "calculator"
+        return when (defaultSharedPreferences.getString("settingsDefaultKeyword", "last")) {
+            "last" -> {
+                sharedPreferences.getString("defKeyboard", "calculator") ?: "calculator"
+            }
+            "calculator" -> {
+                "calculator"
+            }
+            "number" -> {
+                "number"
+            }
+            else -> {
+                "normal"
+            }
+        }
     }
+
 }

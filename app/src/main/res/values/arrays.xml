@@ -1,0 +1,55 @@
+<resources>
+    <string-array name="settings_default_keyword">
+        <item>Last Selected</item>
+        <item>Calculator</item>
+        <item>Text Keyboard</item>
+        <item>Number Keyboard</item>
+    </string-array>
+    <string-array name="settings_default_keyword_values">
+        <item>last</item>
+        <item>calculator</item>
+        <item>text</item>
+        <item>number</item>
+    </string-array>
+
+
+    <string-array name="settings_submit_action">
+        <item>Calculate and submit the result</item>
+        <item>Submit the input as text</item>
+        <item>Both</item>
+    </string-array>
+    <string-array name="settings_submit_action_values">
+        <item>result</item>
+        <item>text</item>
+        <item>both</item>
+    </string-array>
+
+
+
+
+    <string-array name="settings_text_keyboard_type">
+        <item>QWERT</item>
+        <item>ABCDE</item>
+    </string-array>
+    <string-array name="settings_text_keyboard_type_values">
+        <item>qwert</item>
+        <item>abcde</item>
+    </string-array>
+
+
+    <string-array name="settings_default_currency">
+        <item>India INR (₹)</item>
+        <item>Philippine Peso (₱)</item>
+        <item>United States Dollar ($)</item>
+        <item>Euro (€)</item>
+        <item>pound (£)</item>
+    </string-array>
+    <string-array name="settings_default_currency_values">
+        <item>₹</item>
+        <item>₱</item>
+        <item>$</item>
+        <item>€</item>
+        <item>£</item>
+    </string-array>
+
+</resources>

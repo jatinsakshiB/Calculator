@@ -143,6 +143,24 @@ class CalculatorManager(
         calculatedTextEt.focus()
     }
 
+    fun clearAndGetCalculated() : String{
+        val newCalculated = calculated;
+        LocalStorage(calculatedTextEt.context).saveCalculatorHistory(
+            CalculatorHistory(
+                System.currentTimeMillis(),
+                calculatedDouble,
+                calculatedTextEt.text.toString(),
+                calculateFrom
+            )
+        )
+        calculatedDouble = 0.0
+        currentText = ""
+        calculated = ""
+        calculatedTextEt.setText("")
+        liveCalculatedText.text = ""
+        return newCalculated
+    }
+
 
     var onClick: (()->Unit)? = null
 

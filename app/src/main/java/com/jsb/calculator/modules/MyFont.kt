@@ -54,4 +54,13 @@ data class MyFont(
     var bigX: String = "X",
     var bigY: String = "Y",
     var bigZ: String = "Z",
-)
+){
+
+    fun toQWERTYList(): List<String> = listOf(q, w, e, r, t, y, u, i, o, p, a, s, d, f, g, h, j, k, l, z, x, c, v, b, n, m)
+
+    fun toABCDEFList(): List<String> = listOf(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z)
+
+    fun toBigQWERTYList(): List<String> = listOf(bigQ, bigW, bigE, bigR, bigT, bigY, bigU, bigI, bigO, bigP, bigA, bigS, bigD, bigF, bigG, bigH, bigJ, bigK, bigL, bigZ, bigX, bigC, bigV, bigB, bigN, bigM)
+
+    fun toBigABCDEList(): List<String> = listOf(bigA, bigB, bigC, bigD, bigE, bigF, bigG, bigH, bigI, bigJ, bigK, bigL, bigM, bigN, bigO, bigP, bigQ, bigR, bigS, bigT, bigU, bigV, bigW, bigX, bigY, bigZ)
+}

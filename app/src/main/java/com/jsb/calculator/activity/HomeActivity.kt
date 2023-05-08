@@ -121,7 +121,7 @@ class HomeActivity : AppCompatActivity() {
         })
 
         adapter.addItem(HomeData("Settings", R.drawable.round_settings){
-            launchActivities.launch(Intent(this, CustomizeKeyboardActivity::class.java))
+            launchActivities.launch(Intent(this, SettingsActivity::class.java))
         })
 
 
@@ -190,7 +190,7 @@ class HomeActivity : AppCompatActivity() {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
-            val shareMessage = "Get quick calculations on the go with this ${getString(R.string.app_name)} app! Try it now: https://play.google.com/store/apps/details?id=com.jsb.calculator"
+            val shareMessage = "https://calculator.jbdev.in/\n\nGet quick calculations on the go with this ${getString(R.string.app_name)} app! Try it now: https://play.google.com/store/apps/details?id=com.jsb.calculator"
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
             startActivity(Intent.createChooser(shareIntent, "Choose one"))
 

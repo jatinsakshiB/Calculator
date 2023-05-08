@@ -1,0 +1,92 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="Settings">
+
+        <ListPreference
+            app:iconSpaceReserved="false"
+            app:defaultValue="qwert"
+            app:entries="@array/settings_text_keyboard_type"
+            app:entryValues="@array/settings_text_keyboard_type_values"
+            app:key="settingsTextKeyboardType"
+            app:title="Text Keyboard Type"
+            app:useSimpleSummaryProvider="true" />
+
+
+        <ListPreference
+            app:iconSpaceReserved="false"
+            app:defaultValue="last"
+            app:entries="@array/settings_default_keyword"
+            app:entryValues="@array/settings_default_keyword_values"
+            app:key="settingsDefaultKeyword"
+            app:title="Default Keyword"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:iconSpaceReserved="false"
+            app:defaultValue="₹"
+            app:entries="@array/settings_default_currency"
+            app:entryValues="@array/settings_default_currency_values"
+            app:key="settingsDefaultCurrency"
+            app:title="Default currency"
+            app:useSimpleSummaryProvider="true" />
+
+
+<!--
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="signature"
+            app:title="Default keyword"
+            app:useSimpleSummaryProvider="true" />
+-->
+
+        <SwitchPreferenceCompat
+            app:key="settingsSaveHistory"
+            app:defaultValue="true"
+            app:title="Save Calculation History"
+            app:iconSpaceReserved="false"
+            app:summaryOff="Calculation history will not be saved"
+            app:summaryOn="Calculation history will be saved" />
+
+
+        <ListPreference
+            app:iconSpaceReserved="false"
+            app:defaultValue="result"
+            app:entries="@array/settings_submit_action"
+            app:entryValues="@array/settings_submit_action_values"
+            app:key="settingsSubmitAction"
+            app:title="Calculator Keyboard Submit Action"
+            app:useSimpleSummaryProvider="true" />
+
+
+
+    </PreferenceCategory>
+
+    <PreferenceScreen
+        app:iconSpaceReserved="false"
+        app:key="contactUs"
+        app:title="Contact Us">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://calculator.jbdev.in/#contact-to-jbdev"
+            android:targetPackage="android" />
+
+    </PreferenceScreen>
+
+
+    <PreferenceScreen
+        app:iconSpaceReserved="false"
+        app:key="privacyPolicy"
+        app:title="Privacy Policy">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://calculator.jbdev.in/privacy-policy/"
+            android:targetPackage="android" />
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

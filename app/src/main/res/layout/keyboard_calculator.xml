@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/keyboard_bg"
     android:layout_height="wrap_content">
 
@@ -55,26 +57,6 @@
                     android:text="€"
                     android:layout_height="match_parent"/>
 
-                <TextView
-                    android:layout_width="50dp"
-                    android:id="@+id/btSYen1"
-                    android:layout_weight="1"
-                    android:textColor="@color/keyboard_key"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:text="¥"
-                    android:layout_height="match_parent"/>
-
-
-                <TextView
-                    android:layout_width="50dp"
-                    android:id="@+id/btSBit1"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/keyboard_key"
-                    android:textSize="20sp"
-                    android:text="₿"
-                    android:layout_height="match_parent"/>
 
 
                 <TextView
@@ -165,7 +147,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:background="#333"
+            android:background="@color/light"
             android:layout_height="0.5dp"/>
 
         <LinearLayout
@@ -198,7 +180,7 @@
 
             <LinearLayout
                 android:layout_width="0.5dp"
-                android:background="#333"
+                android:background="@color/light"
                 android:layout_height="match_parent"/>
 
 
@@ -281,7 +263,7 @@
 
             <LinearLayout
                 android:layout_width="0.5dp"
-                android:background="#333"
+                android:background="@color/light"
                 android:layout_height="match_parent"/>
 
             <TextView
@@ -351,20 +333,23 @@
                 android:layout_height="match_parent"/>
 
 
-            <TextView
+            <ImageView
                 android:layout_width="match_parent"
-                android:id="@+id/bt3342"
-                android:textColor="@color/keyboard_key"
+                android:id="@+id/btSetting"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:src="@drawable/round_settings"
+                app:tint="@color/keyboard_key"
+                android:tint="@color/keyboard_key"
                 android:background="@drawable/button_r1"
-                android:textSize="20sp"
-                android:text="+"
-                android:layout_height="match_parent"/>
+                android:scaleType="fitCenter"
+                android:gravity="center"
+                android:padding="12dp"
+                android:layout_height="match_parent"
+                tools:ignore="UseAppTint" />
 
             <LinearLayout
                 android:layout_width="0.5dp"
-                android:background="#333"
+                android:background="@color/light"
                 android:layout_height="match_parent"/>
 
 
@@ -450,7 +435,7 @@
 
             <LinearLayout
                 android:layout_width="0.5dp"
-                android:background="#333"
+                android:background="@color/light"
                 android:layout_height="match_parent"/>
 
 
@@ -534,7 +519,7 @@
 
             <LinearLayout
                 android:layout_width="0.5dp"
-                android:background="#333"
+                android:background="@color/light"
                 android:layout_height="match_parent"/>
 
 

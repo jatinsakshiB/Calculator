@@ -8,10 +8,12 @@ import com.google.firebase.ktx.Firebase
 import com.jsb.calculator.keyboard_service.SimpleIME
 import com.jsb.calculator.activity.CalculatorActivity
 import com.jsb.calculator.activity.HistoryActivity
+import com.jsb.calculator.activity.SettingsActivity
 import com.jsb.calculator.databinding.KeyboardCalculatorBinding
 import com.jsb.calculator.enums.CalButtons
 import com.jsb.calculator.manager.CalculatorManager
 import com.jsb.calculator.manager.FloatingCalculatorManager
+import com.jsb.calculator.manager.LocalStorage
 
 class CalculatorKeyboardViewManager(
     var context: SimpleIME,
@@ -19,8 +21,7 @@ class CalculatorKeyboardViewManager(
 ) {
 
 
-    private var currencySymbol = "₹"[0]
-
+    var currencySymbol: String = "₹"
 
     init {
         setUpClicks()
@@ -28,38 +29,62 @@ class CalculatorKeyboardViewManager(
     }
 
     fun refresh(){
+        currencySymbol = LocalStorage(context).getDefaultCurrency()
+        binding.btSymbol.text = currencySymbol
 
     }
 
 
     private fun setUpClicks() {
-        binding.btSymbol.text = currencySymbol.toString()
+        currencySymbol = LocalStorage(context).getDefaultCurrency()
+        binding.btSymbol.text = currencySymbol
         binding.btSymbol.setOnClickListener {
-            context.addText(currencySymbol.toString())
+            context.addText(currencySymbol)
         }
-        binding.btSymbol.setOnLongClickListener { view: View? ->
+        binding.btSymbol.setOnLongClickListener {
             binding.currencyLl.visibility = View.VISIBLE
-            //₿ ¥ £ ₱ € $ ₹
             fun setSymbol(symbol: String) {
-                currencySymbol = symbol[0]
+                currencySymbol = symbol
                 binding.btSymbol.text = symbol
                 binding.currencyLl.visibility = View.GONE
+                LocalStorage(context).saveDefaultCurrency(symbol)
             }
-            binding.btSBit1.setOnClickListener { setSymbol("₿") }
             binding.btSBri1.setOnClickListener { setSymbol("£") }
             binding.btSEuro1.setOnClickListener { setSymbol("€") }
             binding.btSPhi1.setOnClickListener { setSymbol("₱") }
             binding.btSRup1.setOnClickListener { setSymbol("₹") }
             binding.btSUsd1.setOnClickListener { setSymbol("$") }
-            binding.btSYen1.setOnClickListener { setSymbol("¥") }
+
+            Firebase.analytics.logEvent("long_click_and_changed_currency", Bundle().apply {
+                putString("open", "yes")
+            })
             true
+        }
+
+        binding.btB1.setOnClickListener {
+            context.showToast("Coming soon")
+            Firebase.analytics.logEvent("brackets_toast", Bundle().apply {
+                putString("click", "yes")
+            })
+        }
+
+        binding.btB2.setOnClickListener {
+            context.showToast("Coming soon")
+            Firebase.analytics.logEvent("brackets_toast", Bundle().apply {
+                putString("click", "yes")
+            })
         }
 
         context.addBackspace(binding.btMainBackspace)
 
 
-        binding.bt3342.setOnClickListener {
-            context.showToast("Coming soon")
+        binding.btSetting.setOnClickListener {
+            val intent = Intent(context, SettingsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+            Firebase.analytics.logEvent("settings_open_from_keyboard", Bundle().apply {
+                putString("open", "yes")
+            })
         }
         binding.btHistory.setOnClickListener { view: View? ->
             val intent = Intent(context, HistoryActivity::class.java)
@@ -67,12 +92,6 @@ class CalculatorKeyboardViewManager(
             context.startActivity(intent)
             Firebase.analytics.logEvent("history_open_from_keyboard", Bundle().apply {
                 putString("open", "yes")
-            })
-        }
-        binding.submitBt.setOnClickListener {
-            context.addText(binding.calculatedTextEt.text.toString())
-            Firebase.analytics.logEvent("submit_calculator_keyboard", Bundle().apply {
-                putString("text", binding.calculatedTextEt.text.toString())
             })
         }
 
@@ -128,6 +147,23 @@ class CalculatorKeyboardViewManager(
         cm.addBt(binding.btEqualsTo, CalButtons.EqualsTo)
         cm.addBt(binding.btClear, CalButtons.Clear)
         cm.addBt(binding.btCalculatorBackspace, CalButtons.Backspace)
+
+        binding.submitBt.setOnClickListener {
+            if (LocalStorage(context).getSubmitAction() == "result"){
+                context.addText(cm.clearAndGetCalculated())
+            }else if (LocalStorage(context).getSubmitAction() == "both"){
+                var calculatedText = binding.calculatedTextEt.text.toString()
+                calculatedText = "$calculatedText = ${cm.clearAndGetCalculated()}"
+                context.addText(calculatedText)
+
+            }else{
+                context.addText(binding.calculatedTextEt.text.toString())
+                cm.clearAndGetCalculated()
+            }
+            Firebase.analytics.logEvent("submit_calculator_keyboard", Bundle().apply {
+                putString("text", binding.calculatedTextEt.text.toString())
+            })
+        }
 
         cm.onClick = {
             //context.playSound()
